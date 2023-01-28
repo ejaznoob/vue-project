@@ -1,0 +1,51 @@
+name: Push-to-EC2
+
+# Trigger deployment only on push to master branch
+on:
+  push:
+    branches:
+      - Developers-Branch
+
+jobs:
+  deploy:
+    name: Deploy to EC2 on master branch push
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout the files
+        uses: actions/checkout@v2
+
+      - name: Checkout source code
+        uses: actions/checkout@master
+
+      - name: Cache node modules
+          uses: actions/cache@v1
+          with:
+            path: node_modules
+            key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+            restore-keys: |
+              ${{ runner.OS }}-build-
+              ${{ runner.OS }}-
+
+      - name: Install
+          run: npm install
+
+      - name: Lint
+          run: npm run lint
+
+      - name: Test
+          run: npm run test:unit
+
+      - name: Build
+          run: npm run build
+
+      - name: deploy to Server
+          uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+          with:
+            username: ${{ secrets.HOST_USERNAME }}
+            server: ${{ secrets.HOST_IP }}
+            ssh_private_key: ${{ secrets.EC2_SSH_KEY }}
+            local_path: './dist/*'
+            remote_path: ${{ secrets.HOST_TARGET_DIR_CURRENT }}
+            sftp_only: true
+
