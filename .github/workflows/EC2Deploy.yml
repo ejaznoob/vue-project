@@ -41,6 +41,6 @@ jobs:
             server: ${{ secrets.HOST_IP }}
             ssh_private_key: ${{ secrets.EC2_SSH_KEY }}
             local_path: './dist/*'
-            remote_path: ${{ secrets.HOST_TARGET_DIR_CURRENT }}
+            remote_path: ${{ secrets.HOST_TARGET_DIR }}
             sftp_only: true
 
