@@ -43,4 +43,3 @@ jobs:
             local_path: './dist/*'
             remote_path: ${{ secrets.HOST_TARGET_DIR }}
             sftp_only: true
-
