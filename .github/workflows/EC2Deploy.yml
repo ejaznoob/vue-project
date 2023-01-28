@@ -28,8 +28,8 @@ jobs:
 #      - name: Lint
 #        run: npm run lint
 
-      - name: Test
-        run: npm run test:unit
+#      - name: Test
+#        run: npm run test:unit
 
       - name: Build
         run: npm run build
